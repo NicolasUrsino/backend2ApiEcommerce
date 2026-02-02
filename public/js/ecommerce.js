@@ -32,7 +32,7 @@ async function addToCart(pid) {
 
     showButtonCart();
 
-    alert('Producto añadido satisfactoriamente!');
+    alert('Producto añadido!');
 }
 
 function showButtonCart() {
