@@ -11,24 +11,24 @@ class cartDBManager {
     }
 
     async getProductsFromCartByID(cid) {
-        const cart = await cartModel.findOne({_id: cid}).populate('products.product');
+        const cart = await cartModel.findOne({ _id: cid }).populate('products.product');
 
         if (!cart) throw new Error(`El carrito ${cid} no existe!`);
-        
+
         return cart;
     }
 
     async createCart() {
-        return await cartModel.create({products: []});
+        return await cartModel.create({ products: [] });
     }
 
     async addProductByID(cid, pid) {
         await this.productDBManager.getProductByID(pid);
 
-        const cart = await cartModel.findOne({ _id: cid});
+        const cart = await cartModel.findOne({ _id: cid });
 
         if (!cart) throw new Error(`El carrito ${cid} no existe!`);
-    
+
         let i = null;
         const result = cart.products.filter(
             (item, index) => {
@@ -45,7 +45,7 @@ class cartDBManager {
                 quantity: 1
             });
         }
-        await cartModel.updateOne({ _id: cid }, { products: cart.products});
+        await cartModel.updateOne({ _id: cid }, { products: cart.products });
 
         return await this.getProductsFromCartByID(cid);
     }
@@ -53,25 +53,28 @@ class cartDBManager {
     async deleteProductByID(cid, pid) {
         await this.productDBManager.getProductByID(pid);
 
-        const cart = await cartModel.findOne({ _id: cid});
+        const cart = await cartModel.findOne({ _id: cid });
 
         if (!cart) throw new Error(`El carrito ${cid} no existe!`);
-    
+
         let i = null;
         const newProducts = cart.products.filter(item => item.product.toString() !== pid);
 
-        await cartModel.updateOne({ _id: cid }, { products: newProducts});
-        
+        await cartModel.updateOne({ _id: cid }, { products: newProducts });
+
         return await this.getProductsFromCartByID(cid);
     }
 
     async updateAllProducts(cid, products) {
+        const cart = await cartModel.findById(cid);
+        if (!cart) throw new Error(`El carrito ${cid} no existe!`);
+
         for (let key in products) {
             await this.productDBManager.getProductByID(products[key].product);
         }
 
         await cartModel.updateOne({ _id: cid }, { products: products });
-        
+
         return await this.getProductsFromCartByID(cid)
     }
 
@@ -81,10 +84,10 @@ class cartDBManager {
 
         await this.productDBManager.getProductByID(pid);
 
-        const cart = await cartModel.findOne({ _id: cid});
+        const cart = await cartModel.findOne({ _id: cid });
 
         if (!cart) throw new Error(`El carrito ${cid} no existe!`);
-    
+
         let i = null;
         const result = cart.products.filter(
             (item, index) => {
@@ -97,15 +100,17 @@ class cartDBManager {
 
         cart.products[i].quantity = parseInt(quantity);
 
-        await cartModel.updateOne({ _id: cid }, { products: cart.products});
+        await cartModel.updateOne({ _id: cid }, { products: cart.products });
 
         return await this.getProductsFromCartByID(cid);
     }
 
     async deleteAllProducts(cid) {
+        const cart = await cartModel.findById(cid);
+        if (!cart) throw new Error(`El carrito ${cid} no existe!`);
 
         await cartModel.updateOne({ _id: cid }, { products: [] });
-        
+
         return await this.getProductsFromCartByID(cid)
     }
 }

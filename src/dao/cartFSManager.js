@@ -70,7 +70,7 @@ class cartFSManager {
                 return cart.id == cid;
             }
         );
-        console.log('index: ', i, 'cid: ', cid);
+        
 
         if (cartFilter.length > 0) {
             let exist = false;

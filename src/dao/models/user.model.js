@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema(
         },
 
         age: { type: Number, required: true, min: 0 },
-    
+
         password: { type: String, required: true },
 
 
@@ -27,6 +27,8 @@ const userSchema = new mongoose.Schema(
             ref: "carts",
             default: null,
         },
+        resetToken: { type: String },
+        resetTokenExpires: { type: Date },
 
         role: { type: String, default: "user" },
     },

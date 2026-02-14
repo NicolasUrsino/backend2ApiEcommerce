@@ -36,7 +36,8 @@ class productDBManager {
     async createProduct(product) {
         const {title, description, code, price, stock, category, thumbnails} = product;
 
-        if (!title || !description || !code || !price || !stock || !category) {
+        if (!title || !description || !code || price == null || stock == null || !category)
+ {
             throw new Error('Error al crear el producto');
         }
 
@@ -44,7 +45,13 @@ class productDBManager {
     }
 
     async updateProduct(pid, productUpdate) {
-        return await productModel.updateOne({_id: pid}, productUpdate);
+       const result = await productModel.updateOne({_id: pid}, productUpdate);
+
+if (result.matchedCount === 0)
+  throw new Error(`El producto ${pid} no existe!`);
+
+return result;
+
     }
 
     async deleteProduct(pid) {

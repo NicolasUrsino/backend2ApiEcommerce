@@ -1,4 +1,3 @@
-// src/config/passport.config.js
 
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
